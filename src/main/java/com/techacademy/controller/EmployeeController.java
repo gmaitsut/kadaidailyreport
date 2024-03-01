@@ -100,56 +100,44 @@ public class EmployeeController {
 
     // 従業員更新画面
     @GetMapping(value = "/{code}/update")
-    public String edit(@PathVariable String code, Model model,Employee employee) {
-        if (null!=code) {
+    public String edit(@PathVariable String code, Model model, Employee employee) {
+        if (null != code) {
             model.addAttribute("employee", employeeService.findByCode(code));
-        }else {
+        } else {
             model.addAttribute("employee", employee);
         }
 
         return "employees/update";
     }
- // 従業員更新処理
+
+    // 従業員更新処理
     @PostMapping(value = "/{code}/update")
-    public String update(@Validated Employee employee, BindingResult res, Model model) {
+    public String update(@PathVariable String code, @Validated Employee employee, BindingResult res, Model model) {
 
-        // パスワード空白チェック
-        /*
-         * エンティティ側の入力チェックでも実装は行えるが、更新の方でパスワードが空白でもチェックエラーを出さずに
-         * 更新出来る仕様となっているため上記を考慮した場合に別でエラーメッセージを出す方法が簡単だと判断
-         */
-//        if ("".equals(employee.getPassword())) {
-//            // パスワードが空白だった場合
-//            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.BLANK_ERROR),
-//                    ErrorMessage.getErrorValue(ErrorKinds.BLANK_ERROR));
-//
-//            return create(employee);
-//
-//        }
+        // URLにある従業員番号を更新画面の入力フォームにセット
+        employee.setCode(code);
 
-        // 入力チェック
+        // 入力チェックでエラー表示になった場合に更新画面を再表示させる
         if (res.hasErrors()) {
-            return edit(null,model,employee);
+            return edit(null, model, employee);
         }
-//
-//        // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
-//        // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
-//        try {
-//            ErrorKinds result = employeeService.save(employee);
-//
-//            if (ErrorMessage.contains(result)) {
-//                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-//                return create(employee);
-//            }
-//
-//        } catch (DataIntegrityViolationException e) {
-//            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
-//                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-//            return create(employee);
-//        }
 
-        return "redirect:/employees";
+        // エラーがない場合は従業員を更新する
+        ErrorKinds result = employeeService.update(employee);
+
+        //パスワードがエラーだった場合のエラー表示
+        if (ErrorMessage.contains(result)) {
+
+            //エラーメッセージをセットする
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+
+            //更新画面を再表示させる
+            return edit(null, model, employee);
         }
+
+        //更新出来て一覧画面に戻る
+        return "redirect:/employees";
+    }
 
     // 従業員削除処理
     @PostMapping(value = "/{code}/delete")

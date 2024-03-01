@@ -52,6 +52,41 @@ public class EmployeeService {
         return ErrorKinds.SUCCESS;
     }
 
+    // 従業員更新
+    @Transactional
+    public ErrorKinds update(Employee employee) {
+
+        //上書きする従業員の従業員番号を元データで検索
+        Employee motodate = findByCode(employee.getCode());
+
+        //入力した名前を元データにセットする
+        motodate.setName(employee.getName());
+
+        //入力した権限を元データにセットする
+        motodate.setRole(employee.getRole());
+
+        // パスワードが空だった場合は何もしない
+        if ("".equals(employee.getPassword())) {
+
+        // パスワードが入っていた場合
+        } else {
+            //入力した新しいパスワードを元データにセットする
+            motodate.setPassword(employee.getPassword());
+            // 元データにセットされたパスワードが条件に当てはまるかチェックする
+            ErrorKinds result = employeePasswordCheck(motodate);
+            if (ErrorKinds.CHECK_OK != result) {
+                return result;
+            }
+        }
+
+        //更新日時を元データにセットする
+        LocalDateTime now = LocalDateTime.now();
+        motodate.setUpdatedAt(now);
+
+        employeeRepository.save(motodate);
+        return ErrorKinds.SUCCESS;
+    }
+
     // 従業員削除
     @Transactional
     public ErrorKinds delete(String code, UserDetail userDetail) {
