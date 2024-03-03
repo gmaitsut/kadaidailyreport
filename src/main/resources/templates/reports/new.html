@@ -34,15 +34,15 @@
                                         <label class="form-label" for="name">氏名</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="text" th:field="*{name}" th:errorclass="err" id="name">
-                                            <span th:errors="*{name}" class="text-danger"></span>
+                                            <input class="form-control" type="text" th:field="*{employee.name}" th:errorclass="err" id="employee.name">
+                                            <span th:errors="*{employee.name}" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="title">タイトル</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="title" th:field="*{title}" th:errorclass="err" id="title">
+                                            <input class="form-control" text="title" th:field="*{title}" th:errorclass="err" id="title">
                                             <span th:if="${titleError} neq null" th:text="${titleError}" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -50,7 +50,7 @@
                                        <label class="form-label" for="content">内容</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="title" th:field="*{content}" th:errorclass="err" id="content">
+                                            <input class="form-control" text="content" th:field="*{content}" th:errorclass="err" id="content">
                                             <span th:if="${contentError} neq null" th:text="${contentError}" class="text-danger"></span>
                                         </div>
                                     </div>
