@@ -74,6 +74,7 @@ public class EmployeeService {
             motodate.setPassword(employee.getPassword());
             // 元データにセットされたパスワードが条件に当てはまるかチェックする
             ErrorKinds result = employeePasswordCheck(motodate);
+            //エラーがあるか確認　エラーがなければ83行目に進む
             if (ErrorKinds.CHECK_OK != result) {
                 return result;
             }
