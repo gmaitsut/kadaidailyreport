@@ -57,16 +57,12 @@ public class ReportsController {
     }
 
     // 日報新規登録処理
-//    @PostMapping(value = "/add")
-//    public String add(@Validated Reports reports, BindingResult res, Model model) {
-//
-//        // パスワード空白チェック
-//        /*
-//         * エンティティ側の入力チェックでも実装は行えるが、更新の方でパスワードが空白でもチェックエラーを出さずに
-//         * 更新出来る仕様となっているため上記を考慮した場合に別でエラーメッセージを出す方法が簡単だと判断
-//         */
-//        if ("".equals(reports.getPassword())) {
-//            // パスワードが空白だった場合
+    @PostMapping(value = "/add")
+    public String add(@Validated Report reports, BindingResult res, Model model) {
+
+//        // 日付空白チェック
+//        if ("".equals(reports.getReportDate())) {
+//            // 日付が空白だった場合
 //            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.BLANK_ERROR),
 //                    ErrorMessage.getErrorValue(ErrorKinds.BLANK_ERROR));
 //
@@ -95,8 +91,8 @@ public class ReportsController {
 //            return create(reports);
 //        }
 //
-//        return "redirect:/reports";
-//    }
+        return "redirect:/reports";
+    }
 
 //    // 日報更新画面
 //    @GetMapping(value = "/{code}/update")
