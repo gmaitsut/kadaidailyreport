@@ -60,15 +60,6 @@ public class ReportsController {
     @PostMapping(value = "/add")
     public String add(@Validated Report reports, BindingResult res, Model model) {
 
-//        // 日付空白チェック
-//        if ("".equals(reports.getReportDate())) {
-//            // 日付が空白だった場合
-//            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.BLANK_ERROR),
-//                    ErrorMessage.getErrorValue(ErrorKinds.BLANK_ERROR));
-//
-//            return create(reports);
-//
-//        }
 //
 //        // 入力チェック
 //        if (res.hasErrors()) {
