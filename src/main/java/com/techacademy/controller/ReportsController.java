@@ -45,7 +45,7 @@ public class ReportsController {
     @GetMapping(value = "/{code}/")
     public String detail(@PathVariable String code, Model model) {
 
-//        model.addAttribute("reports", reportsService.findById(id));
+        model.addAttribute("reports", reportsService.findById(code));
         return "reports/detail";
     }
 
