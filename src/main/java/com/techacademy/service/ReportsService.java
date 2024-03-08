@@ -48,19 +48,20 @@ public class ReportsService {
     }
 
     // 日報更新
-//    @Transactional
-//    public ErrorKinds update(Report reports) {
-//
-//        //上書きする日報番号を元データで検索
-//        Report motoreport = findById(reports.getId());
-//
-//        //入力した日付を元データにセットする
-//        motoreport.setReportDate(reports.getReportDate());
-//
-//        //入力したタイトルを元データにセットする
-//        motoreport.setTitle(reports.getTitle());
-//
-//    }
+    @Transactional
+    public ErrorKinds update(Report reports) {
+
+        //上書きする日報番号を元データで検索
+        Report motoreport = findById(reports.getId());
+
+        //入力した日付を元データにセットする
+        motoreport.setReportDate(reports.getReportDate());
+
+        //入力したタイトルを元データにセットする
+        motoreport.setTitle(reports.getTitle());
+        return null;
+
+    }
 
 //    // 日報削除
 //    @Transactional
