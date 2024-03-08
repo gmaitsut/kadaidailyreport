@@ -1,5 +1,6 @@
 package com.techacademy.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.ReportsRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +31,11 @@ public class ReportsService {
     @Transactional
     public ErrorKinds save(Report reports) {
 
-//
-//        // 日報番号重複チェック
-//        if (findByCode(reports.getCode()) != null) {
-//            return ErrorKinds.DUPLICATE_ERROR;
-//        }
+
+        // 業務チェック日付
+        if (isReportDateAndEmployee(reports.getReportDate(),reports.getEmployee())) {
+            return ErrorKinds.DUPLICATE_ERROR;
+        }
 
         reports.setDeleteFlg(false);
 
@@ -103,12 +105,18 @@ public class ReportsService {
     }
 
     // 1件を検索
-    public Report findByCode(Integer id) {
+    public Report findById(Integer id) {
         // findByIdで検索
         Optional<Report> option = reportsRepository.findById(id);
         // 取得できなかった場合はnullを返す
         Report reports = option.orElse(null);
         return reports;
+    }
+
+    public Boolean isReportDateAndEmployee(LocalDate reportDate,Employee employee) {
+        // findByIdで検索
+        List<Report> reportList = reportsRepository.findByReportDateAndEmployee(reportDate,employee);
+        return !reportList.isEmpty();
     }
 
 
