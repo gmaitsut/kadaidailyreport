@@ -42,10 +42,10 @@ public class ReportsController {
     }
 
     // 日報詳細画面
-    @GetMapping(value = "/{code}/")
-    public String detail(@PathVariable String code, Model model) {
+    @GetMapping(value = "/{id}/")
+    public String detail(@PathVariable Integer id, Model model) {
 
-        model.addAttribute("reports", reportsService.findById(code));
+        model.addAttribute("report", reportsService.findById(id));
         return "reports/detail";
     }
 
@@ -77,57 +77,57 @@ public class ReportsController {
         return "redirect:/reports";
     }
 
-//    // 日報更新画面
-//    @GetMapping(value = "/{code}/update")
-//    public String edit(@PathVariable String code, Model model, Reports reports) {
-//        if (null != code) {
-//            model.addAttribute("reports", reportsService.findByCode(code));
-//        } else {
-//            model.addAttribute("reports", reports);
-//        }
+    // 日報更新画面
+    @GetMapping(value = "/{id}/update")
+    public String edit(@PathVariable String code, Model model, Report reports) {
+        if (null != id) {
+            model.addAttribute("reports", reportsService.findById(id));
+        } else {
+            model.addAttribute("reports", reports);
+        }
+
+        return "reports/update";
+    }
+
+    // 日報更新処理
+    @PostMapping(value = "/{id}/update")
+    public String update(@PathVariable String code, @Validated Report reports, BindingResult res, Model model) {
+
+        // URLにある日報番号を更新画面の入力フォームにセット
+        reports.setId(id);
+
+        // 入力チェックでエラー表示になった場合に更新画面を再表示させる
+        if (res.hasErrors()) {
+            return edit(null, model, reports);
+        }
+
+        // エラーがない場合は日報を更新する
+        ErrorKinds result = reportsService.ReportUpdate(reports);
+
+        //日報データが登録済みだった場合のエラー表示
+        if (ErrorMessage.contains(result)) {
+
+            //エラーメッセージをセットする
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+
+            //更新画面を再表示させる
+            return edit(null, model, reports);
+        }
+
+        //更新出来て一覧画面に戻る
+        return "redirect:/reports";
+    }
+
+    // 日報削除処理
+//    @PostMapping(value = "/{id}/delete")
+//    public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 //
-//        return "reports/update";
-//    }
+//        ErrorKinds result = reportsService.delete(id, userDetail);
 //
-//    // 日報更新処理
-//    @PostMapping(value = "/{code}/update")
-//    public String update(@PathVariable String code, @Validated Reports reports, BindingResult res, Model model) {
-//
-//        // URLにある従業員番号を更新画面の入力フォームにセット
-//        reports.setCode(code);
-//
-//        // 入力チェックでエラー表示になった場合に更新画面を再表示させる
-//        if (res.hasErrors()) {
-//            return edit(null, model, reports);
-//        }
-//
-//        // エラーがない場合は従業員を更新する
-//        ErrorKinds result = reportsService.update(reports);
-//
-//        //パスワードがエラーだった場合のエラー表示
 //        if (ErrorMessage.contains(result)) {
-//
-//            //エラーメッセージをセットする
 //            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-//
-//            //更新画面を再表示させる
-//            return edit(null, model, reports);
-//        }
-//
-//        //更新出来て一覧画面に戻る
-//        return "redirect:/reports";
-//    }
-//
-//    // 日報削除処理
-//    @PostMapping(value = "/{code}/delete")
-//    public String delete(@PathVariable String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-//
-//        ErrorKinds result = reportsService.delete(code, userDetail);
-//
-//        if (ErrorMessage.contains(result)) {
-//            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-//            model.addAttribute("reports", reportsService.findByCode(code));
-//            return detail(code, model);
+//            model.addAttribute("reports", reportsService.findById(id));
+//            return detail(id, model);
 //        }
 //
 //        return "redirect:/reports";

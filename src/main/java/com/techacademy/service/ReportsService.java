@@ -47,40 +47,19 @@ public class ReportsService {
         return ErrorKinds.SUCCESS;
     }
 
-//    // 日報更新
+    // 日報更新
 //    @Transactional
-//    public ErrorKinds update(Reports reports) {
-
-////        //上書きする従業員の従業員番号を元データで検索
-////        Reports motodate = findByCode(reports.getCode());
+//    public ErrorKinds update(Report reports) {
 //
-//        //入力した名前を元データにセットする
-//        motodate.setName(reports.getName());
+//        //上書きする日報番号を元データで検索
+//        Report motoreport = findById(reports.getId());
 //
-//        //入力した権限を元データにセットする
-//        motodate.setRole(reports.getRole());
+//        //入力した日付を元データにセットする
+//        motoreport.setReportDate(reports.getReportDate());
 //
-//        // パスワードが空だった場合は何もしない
-//        if ("".equals(reports.getPassword())) {
+//        //入力したタイトルを元データにセットする
+//        motoreport.setTitle(reports.getTitle());
 //
-//        // パスワードが入っていた場合
-//        } else {
-//            //入力した新しいパスワードを元データにセットする
-//            motodate.setPassword(reports.getPassword());
-//            // 元データにセットされたパスワードが条件に当てはまるかチェックする
-//            ErrorKinds result = reportsPasswordCheck(motodate);
-//            //エラーがあるか確認　エラーがなければ83行目に進む
-//            if (ErrorKinds.CHECK_OK != result) {
-//                return result;
-//            }
-//        }
-//
-//        //更新日時を元データにセットする
-//        LocalDateTime now = LocalDateTime.now();
-//        motodate.setUpdatedAt(now);
-//
-//        reportsRepository.save(motodate);
-//        return ErrorKinds.SUCCESS;
 //    }
 
 //    // 日報削除
@@ -88,10 +67,10 @@ public class ReportsService {
 //    public ErrorKinds delete(String code, UserDetail userDetail) {
 //
 //        // 自分を削除しようとした場合はエラーメッセージを表示
-//        if (code.equals(userDetail.getReports().getCode())) {
+//        if (id.equals(userDetail.getReports().getId())) {
 //            return ErrorKinds.LOGINCHECK_ERROR;
 //        }
-//        Reports reports = findByCode(code);
+//        Reports reports = findById(id);
 //        LocalDateTime now = LocalDateTime.now();
 //        reports.setUpdatedAt(now);
 //        reports.setDeleteFlg(true);
