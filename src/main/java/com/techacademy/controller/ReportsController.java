@@ -80,11 +80,11 @@ public class ReportsController {
     // 日報更新画面
     @GetMapping(value = "/{id}/update")
     public String edit(@PathVariable Integer id, Model model, Report reports) {
-//        if (null != id) {
-//            model.addAttribute("reports", reportsService.findById(id));
-//        } else {
-//            model.addAttribute("reports", reports);
-//        }
+        if (null != id) {
+            model.addAttribute("reports", reportsService.findById(id));
+        } else {
+            model.addAttribute("reports", reports);
+        }
 
         return "reports/update";
     }
@@ -104,15 +104,15 @@ public class ReportsController {
         // エラーがない場合は日報を更新する
         ErrorKinds result = reportsService.update(reports);
 
-//        //日報データが登録済みだった場合のエラー表示
-//        if (ErrorMessage.contains(result)) {
-//
-//            //エラーメッセージをセットする
-//            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-//
-//            //更新画面を再表示させる
-//            return edit(null, model, reports);
-//        }
+        //日報データが登録済みだった場合のエラー表示
+        if (ErrorMessage.contains(result)) {
+
+            //エラーメッセージをセットする
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+
+            //更新画面を再表示させる
+            return edit(null, model, reports);
+        }
 
         //更新出来て一覧画面に戻る
         return "redirect:/reports";

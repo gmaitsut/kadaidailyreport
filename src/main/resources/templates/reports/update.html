@@ -30,13 +30,14 @@
                                             <span th:errors="*{reportDate}" class="text-danger"></span>
                                             <span th:if="${reportDateError} neq null" th:text="${reportDateError}" class="text-danger"></span>
                                         </div>
-                                    <div class="mb-3">
+                                        <div class="mb-3">
                                         <label class="form-label" for="name">氏名</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
                                             <input class="form-control" th:type="hidden" th:field="*{employee.code}">
                                             <span th:text="${report.employee.name}"></span>
                                         </div>
+
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="title">タイトル</label>
