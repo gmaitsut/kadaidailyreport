@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReportsService {
 
     private final ReportsRepository reportsRepository;
+    public Object reportDate;
 
     @Autowired
     public ReportsService(ReportsRepository reportsRepository) {
@@ -51,29 +52,43 @@ public class ReportsService {
     @Transactional
     public ErrorKinds update(Report reports) {
 
-        //上書きする日報番号を元データで検索
-        Report motoreport = findById(reports.getId());
+     // 業務チェック日付
+        if (isReportDateAndEmployee(reports.getReportDate(),reports.getEmployee())) {
+            return ErrorKinds.DATECHECK_ERROR;
+        }
 
-        //入力した日付を元データにセットする
-        motoreport.setReportDate(reports.getReportDate());
+        reports.setDeleteFlg(false);
 
-        //入力したタイトルを元データにセットする
-        motoreport.setTitle(reports.getTitle());
-        return null;
+        LocalDateTime now = LocalDateTime.now();
+        reports.setCreatedAt(now);
+        reports.setUpdatedAt(now);
+
+        reportsRepository.save(reports);
+        return ErrorKinds.SUCCESS;
+
+
+//        //上書きする日報番号を元データで検索
+//        Report motoreport = findById(reports.getId());
+//
+//        //入力した日付を元データにセットする
+//        motoreport.setReportDate(reports.getReportDate());
+//
+//        //入力したタイトルを元データにセットする
+//        motoreport.setTitle(reports.getTitle());
+//        return null;
+
 
     }
-
-
 
 //    // 日報削除
 //    @Transactional
 //    public ErrorKinds delete(String code, UserDetail userDetail) {
 //
 //        // 自分を削除しようとした場合はエラーメッセージを表示
-//        if (id.equals(userDetail.getReports().getId())) {
+//        if (id.equals(userDetail.getReport().getId())) {
 //            return ErrorKinds.LOGINCHECK_ERROR;
 //        }
-//        Reports reports = findById(id);
+//        Report reports = findById(id);
 //        LocalDateTime now = LocalDateTime.now();
 //        reports.setUpdatedAt(now);
 //        reports.setDeleteFlg(true);

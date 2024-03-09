@@ -1,5 +1,7 @@
 package com.techacademy.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,6 +48,7 @@ public class ReportsController {
     public String detail(@PathVariable Integer id, Model model) {
 
         model.addAttribute("report", reportsService.findById(id));
+        
         return "reports/detail";
     }
 
@@ -81,9 +84,9 @@ public class ReportsController {
     @GetMapping(value = "/{id}/update")
     public String edit(@PathVariable Integer id, Model model, Report reports) {
         if (null != id) {
-            model.addAttribute("reports", reportsService.findById(id));
+            model.addAttribute("report", reportsService.findById(id));
         } else {
-            model.addAttribute("reports", reports);
+            model.addAttribute("report", reports);
         }
 
         return "reports/update";
