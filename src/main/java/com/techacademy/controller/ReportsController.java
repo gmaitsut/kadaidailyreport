@@ -137,7 +137,7 @@ public class ReportsController {
     @PostMapping(value = "/{id}/delete")
     public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-        ErrorKinds result = reportsService.delete(id, userDetail);
+        ErrorKinds result = reportsService.delete(id);
 
         if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
