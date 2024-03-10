@@ -51,19 +51,20 @@ public class ReportsService {
     // 日報更新
     @Transactional
     public ErrorKinds update(Report reports) {
-        LocalDate now = LocalDate.now();
-
-        // 業務チェック日付
-        // 日報日付は変わっているか？
-        if(reports.getReportDate() != LocalDate.now()){
-          // 日報日付が更新されているので、重複チェックする
-            return ErrorKinds.DATECHECK_ERROR;
-        }
-
-
+//        LocalDate update = LocalDate.update();
 
         //上書きする日報番号を元データで検索
         Report motoreport = findById(reports.getId());
+
+
+        // 業務チェック日付
+        // 日報日付は変わっているか？
+        if( !motoreport.getReportDate().equals( reports.getReportDate())){
+          // 日報日付が更新されているので、重複チェックする
+            if (isReportDateAndEmployee(reports.getReportDate(),reports.getEmployee())) {
+                return ErrorKinds.DATECHECK_ERROR;
+            }
+        }
 
         //入力した日付を元データにセットする
         motoreport.setReportDate(reports.getReportDate());
@@ -73,26 +74,29 @@ public class ReportsService {
 
         //入力した内容を元データにセットする
         motoreport.setContent(reports.getContent());
-        return null;
+
+
+        //更新日時を元データにセットする
+        LocalDateTime now = LocalDateTime.now();
+        motoreport.setUpdatedAt(now);
+
+        reportsRepository.save(motoreport);
+        return ErrorKinds.SUCCESS;
 
 
     }
 
-    // 日報削除
-//    @Transactional
-//    public ErrorKinds delete(Integer id, UserDetail userDetail) {
-//
-//        // 自分を削除しようとした場合はエラーメッセージを表示
-//        if (id.equals(userDetail.getReport().getId())) {
-//            return ErrorKinds.LOGINCHECK_ERROR;
-//        }
-//        Report reports = findById(id);
-//        LocalDateTime now = LocalDateTime.now();
-//        reports.setUpdatedAt(now);
-//        reports.setDeleteFlg(true);
-//
-//        return ErrorKinds.SUCCESS;
-//    }
+     //日報削除
+    @Transactional
+    public ErrorKinds delete(Integer id) {
+
+        Report reports = findById(id);
+        LocalDateTime now = LocalDateTime.now();
+        reports.setUpdatedAt(now);
+        reports.setDeleteFlg(true);
+
+        return ErrorKinds.SUCCESS;
+    }
 
     // 日報一覧表示処理
     public List<Report> findAll() {
@@ -112,6 +116,12 @@ public class ReportsService {
         // findByIdで検索
         List<Report> reportList = reportsRepository.findByReportDateAndEmployee(reportDate,employee);
         return !reportList.isEmpty();
+    }
+
+    public List<Report> findByEmployee(Employee employee) {
+        // findByIdで検索
+        List<Report> reportList = reportsRepository.findByEmployee(employee);
+        return reportList;
     }
 
 

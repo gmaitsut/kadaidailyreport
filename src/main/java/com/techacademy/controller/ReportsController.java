@@ -1,6 +1,7 @@
 package com.techacademy.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
-
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.service.ReportsService;
 import com.techacademy.service.UserDetail;
@@ -35,20 +36,31 @@ public class ReportsController {
 
     // 日報一覧画面
     @GetMapping
-    public String list(Model model) {
+    public String list(Model model,@AuthenticationPrincipal UserDetail userDetail) {
 
-        model.addAttribute("listSize", reportsService.findAll().size());
-        model.addAttribute("reportsList", reportsService.findAll());
+        Employee loginuser = userDetail.getEmployee();
+        if( userDetail.getEmployee().getRole().equals (Employee.Role.ADMIN) ){
 
-        return "reports/list";
-    }
+            model.addAttribute("listSize", reportsService.findAll().size());
+            model.addAttribute("reportsList", reportsService.findAll());
+        }else{
+            model.addAttribute("listSize", reportsService.findByEmployee(loginuser).size());
+            model.addAttribute("reportsList", reportsService.findByEmployee(loginuser));
+        }
+
+
+            return "reports/list";
+
+        }
+
+
 
     // 日報詳細画面
     @GetMapping(value = "/{id}/")
     public String detail(@PathVariable Integer id, Model model) {
 
         model.addAttribute("report", reportsService.findById(id));
-        
+
         return "reports/detail";
     }
 
@@ -122,18 +134,18 @@ public class ReportsController {
     }
 
     // 日報削除処理
-//    @PostMapping(value = "/{id}/delete")
-//    public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-//
-//        ErrorKinds result = reportsService.delete(id, userDetail);
-//
-//        if (ErrorMessage.contains(result)) {
-//            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-//            model.addAttribute("reports", reportsService.findById(id));
-//            return detail(id, model);
-//        }
-//
-//        return "redirect:/reports";
-//    }
+    @PostMapping(value = "/{id}/delete")
+    public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+
+        ErrorKinds result = reportsService.delete(id, userDetail);
+
+        if (ErrorMessage.contains(result)) {
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            model.addAttribute("reports", reportsService.findById(id));
+            return detail(id, model);
+        }
+
+        return "redirect:/reports";
+    }
 
 }
