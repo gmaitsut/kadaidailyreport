@@ -52,37 +52,40 @@ public class ReportsService {
     @Transactional
     public ErrorKinds update(Report reports) {
 
-     // 業務チェック日付
-        if (isReportDateAndEmployee(reports.getReportDate(),reports.getEmployee())) {
-            return ErrorKinds.DATECHECK_ERROR;
-        }
-
-        reports.setDeleteFlg(false);
-
-        LocalDateTime now = LocalDateTime.now();
-        reports.setCreatedAt(now);
-        reports.setUpdatedAt(now);
-
-        reportsRepository.save(reports);
-        return ErrorKinds.SUCCESS;
-
-
-//        //上書きする日報番号を元データで検索
-//        Report motoreport = findById(reports.getId());
+//     // 業務チェック日付
+//        if (isReportDateAndEmployee(reports.getReportDate(),reports.getEmployee())) {
+//            return ErrorKinds.DATECHECK_ERROR;
+//        }
 //
-//        //入力した日付を元データにセットする
-//        motoreport.setReportDate(reports.getReportDate());
+//        reports.setDeleteFlg(false);
 //
-//        //入力したタイトルを元データにセットする
-//        motoreport.setTitle(reports.getTitle());
-//        return null;
+//        LocalDateTime now = LocalDateTime.now();
+//        reports.setCreatedAt(now);
+//        reports.setUpdatedAt(now);
+//
+//        reportsRepository.save(reports);
+//        return ErrorKinds.SUCCESS;
+
+
+        //上書きする日報番号を元データで検索
+        Report motoreport = findById(reports.getId());
+
+        //入力した日付を元データにセットする
+        motoreport.setReportDate(reports.getReportDate());
+
+        //入力したタイトルを元データにセットする
+        motoreport.setTitle(reports.getTitle());
+
+      //入力したタイトルを元データにセットする
+        motoreport.setContent(reports.getContent());
+        return null;
 
 
     }
 
-//    // 日報削除
+    // 日報削除
 //    @Transactional
-//    public ErrorKinds delete(String code, UserDetail userDetail) {
+//    public ErrorKinds delete(Integer id, UserDetail userDetail) {
 //
 //        // 自分を削除しようとした場合はエラーメッセージを表示
 //        if (id.equals(userDetail.getReport().getId())) {
