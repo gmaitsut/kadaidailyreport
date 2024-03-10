@@ -35,7 +35,7 @@ public class ReportsService {
 
         // 業務チェック日付
         if (isReportDateAndEmployee(reports.getReportDate(),reports.getEmployee())) {
-            return ErrorKinds.DUPLICATE_ERROR;
+            return ErrorKinds.DATECHECK_ERROR;
         }
 
         reports.setDeleteFlg(false);
@@ -51,20 +51,15 @@ public class ReportsService {
     // 日報更新
     @Transactional
     public ErrorKinds update(Report reports) {
+        LocalDate now = LocalDate.now();
 
-//     // 業務チェック日付
-//        if (isReportDateAndEmployee(reports.getReportDate(),reports.getEmployee())) {
-//            return ErrorKinds.DATECHECK_ERROR;
-//        }
-//
-//        reports.setDeleteFlg(false);
-//
-//        LocalDateTime now = LocalDateTime.now();
-//        reports.setCreatedAt(now);
-//        reports.setUpdatedAt(now);
-//
-//        reportsRepository.save(reports);
-//        return ErrorKinds.SUCCESS;
+        // 業務チェック日付
+        // 日報日付は変わっているか？
+        if(reports.getReportDate() != LocalDate.now()){
+          // 日報日付が更新されているので、重複チェックする
+            return ErrorKinds.DATECHECK_ERROR;
+        }
+
 
 
         //上書きする日報番号を元データで検索
@@ -76,7 +71,7 @@ public class ReportsService {
         //入力したタイトルを元データにセットする
         motoreport.setTitle(reports.getTitle());
 
-      //入力したタイトルを元データにセットする
+        //入力した内容を元データにセットする
         motoreport.setContent(reports.getContent());
         return null;
 
